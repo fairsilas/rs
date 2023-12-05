@@ -978,21 +978,21 @@ class DAL(with_metaclass(MetaDAL, Serializable, BasicStorage)):
         ofile.write("END")
 
     def import_from_csv_file(
-        self,
-        ifile,
-        id_map=None,
-        null="<NULL>",
-        unique="uuid",
-        map_tablenames=None,
-        ignore_missing_tables=False,
-        *args,
-        **kwargs
+    self,
+    ifile,
+    id_map=None,
+    null="<NULL>",
+    unique="uuid",
+    map_tablenames=None,
+    ignore_missing_tables=False,
+    *args,
+    **kwargs
     ):
-        # if id_map is None: id_map={}
         id_offset = {}  # only used if id_map is None
         map_tablenames = map_tablenames or {}
+        
         for line in ifile:
-            line = line.strip()
+            line = line.strip().replace('\n', '')  # Remove newline characters
             if not line:
                 continue
             elif line == "END":
@@ -1017,6 +1017,7 @@ class DAL(with_metaclass(MetaDAL, Serializable, BasicStorage)):
                     raise RuntimeError(
                         "Unable to import table that does not exist.\nTry db.import_from_csv_file(..., map_tablenames={'table':'othertable'},ignore_missing_tables=True)"
                     )
+
 
     def can_join(self):
         return self._adapter.can_join()
